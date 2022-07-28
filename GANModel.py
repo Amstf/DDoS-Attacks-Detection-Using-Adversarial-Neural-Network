@@ -11,8 +11,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import QuantileTransformer
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
-# import wandb
-# wandb.init(project="GAN", config={"hyper":"paramet"})
+import wandb
+wandb.init(project="GAN", config={"hyper":"paramet"})
 
 
 def drop_function(df,features):
@@ -296,9 +296,9 @@ def train_plot(df, epochs, batchsize):
     generator, critic, ohe, scaler, data_train, data_test, input_dim = train(df, epochs, batchsize)
     return generator, critic, ohe, scaler, data_train, data_test, input_dim
 
-size_of_fake_data=20000
-num_epochs=50
-batch_size=32
+size_of_fake_data=200000
+num_epochs=70
+batch_size=64
 
 df=pd.read_csv("combined.csv")
 fe=pd.read_csv("DDoS_Functional_Features.csv")
