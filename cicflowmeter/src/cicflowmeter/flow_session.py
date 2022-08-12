@@ -1,6 +1,7 @@
 import csv
 from collections import defaultdict
 
+import requests
 from scapy.sessions import DefaultSession
 
 from .features.context.packet_direction import PacketDirection
@@ -10,7 +11,7 @@ from .flow import Flow
 EXPIRED_UPDATE = 40
 MACHINE_LEARNING_API = "http://localhost:8000/predict"
 GARBAGE_COLLECT_PACKETS = 100
-ff=0
+
 
 class FlowSession(DefaultSession):
     """Creates a list of network flows."""
@@ -22,7 +23,6 @@ class FlowSession(DefaultSession):
         if self.output_mode == "flow":
             output = open(self.output_file, "w")
             self.csv_writer = csv.writer(output)
-            print("output", output)
 
         self.packets_count = 0
 
@@ -62,18 +62,31 @@ class FlowSession(DefaultSession):
             packet_flow_key = get_packet_flow_key(packet, direction)
             flow = self.flows.get((packet_flow_key, count))
 
-        if flow is None:
-            # If no flow exists create a new flow
-            direction = PacketDirection.FORWARD
-            flow = Flow(packet, direction)
-            packet_flow_key = get_packet_flow_key(packet, direction)
-            self.flows[(packet_flow_key, count)] = flow
+            if flow is None:
+                # If no flow exists create a new flow
+                direction = PacketDirection.FORWARD
+                flow = Flow(packet, direction)
+                packet_flow_key = get_packet_flow_key(packet, direction)
+                self.flows[(packet_flow_key, count)] = flow
+
+            elif (packet.time - flow.latest_timestamp) > EXPIRED_UPDATE:
+                # If the packet exists in the flow but the packet is sent
+                # after too much of a delay than it is a part of a new flow.
+                expired = EXPIRED_UPDATE
+                while (packet.time - flow.latest_timestamp) > expired:
+                    count += 1
+                    expired += EXPIRED_UPDATE
+                    flow = self.flows.get((packet_flow_key, count))
+
+                    if flow is None:
+                        flow = Flow(packet, direction)
+                        self.flows[(packet_flow_key, count)] = flow
+                        break
 
         elif (packet.time - flow.latest_timestamp) > EXPIRED_UPDATE:
-            # If the packet exists in the flow but the packet is sent
-            # after too much of a delay than it is a part of a new flow.
             expired = EXPIRED_UPDATE
             while (packet.time - flow.latest_timestamp) > expired:
+
                 count += 1
                 expired += EXPIRED_UPDATE
                 flow = self.flows.get((packet_flow_key, count))
@@ -82,11 +95,6 @@ class FlowSession(DefaultSession):
                     flow = Flow(packet, direction)
                     self.flows[(packet_flow_key, count)] = flow
                     break
-        elif "F" in str(packet.flags):
-            # If it has FIN flag then early collect flow and continue
-            flow.add_packet(packet, direction)
-            self.garbage_collect(packet.time)
-            return
 
         flow.add_packet(packet, direction)
 
@@ -116,15 +124,43 @@ class FlowSession(DefaultSession):
             ):
                 data = flow.get_data()
 
+                # POST Request to Model API
+                if self.url_model:
+                    payload = {
+                        "columns": list(data.keys()),
+                        "data": [list(data.values())],
+                    }
+                    post = requests.post(
+                        self.url_model,
+                        json=payload,
+                        headers={
+                            "Content-Type": "application/json; format=pandas-split"
+                        },
+                    )
+                    resp = post.json()
+                    result = resp["result"].pop
+                    if result == 0:
+                        result_print = "Benign"
+                    else:
+                        result_print = "Malicious"
+
+                    print(
+                        "{: <15}:{: <6} -> {: <15}:{: <6} \t {} (~{:.2f}%)".format(
+                            resp["src_ip"],
+                            resp["src_port"],
+                            resp["dst_ip"],
+                            resp["dst_port"],
+                            result_print,
+                            resp["probability"].pop()[result] * 100,
+                        )
+                    )
+
                 if self.csv_line == 0:
                     self.csv_writer.writerow(data.keys())
-                   
 
                 self.csv_writer.writerow(data.values())
-                print("Dada",data.values())
+                print("data=",data)
                 self.csv_line += 1
-                ff += 1
-                print(ff)
 
                 del self.flows[k]
         if not self.url_model:
