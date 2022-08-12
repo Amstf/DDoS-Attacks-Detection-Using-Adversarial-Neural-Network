@@ -1,8 +1,8 @@
 from enum import Enum
 from typing import Any
+from decimal import Decimal
 
-
-from . import constants
+from .import constants
 from .features.context import packet_flow_key
 from .features.context.packet_direction import PacketDirection
 from .features.flag_count import FlagCount
@@ -29,8 +29,6 @@ class Flow:
             self.src_ip,
             self.src_port,
             self.dest_port,
-            self.src_mac,
-            self.dest_mac,
         ) = packet_flow_key.get_packet_flow_key(packet, direction)
 
         self.packets = []
@@ -98,8 +96,6 @@ class Flow:
             "dst_ip": self.dest_ip,
             "src_port": self.src_port,
             "dst_port": self.dest_port,
-            "src_mac": self.src_mac,
-            "dst_mac": self.dest_mac,
             "protocol": self.protocol,
             # Basic information from packet times
             "timestamp": packet_time.get_time_stamp(),
@@ -217,8 +213,8 @@ class Flow:
 
         if self.start_timestamp != 0:
             self.flow_interarrival_time.append(
-                1e6 * (packet.time - self.latest_timestamp)
-            )
+                Decimal("1e6") * Decimal(packet.time - self.latest_timestamp))
+            
 
         self.latest_timestamp = max([packet.time, self.latest_timestamp])
 
@@ -246,7 +242,7 @@ class Flow:
         last_timestamp = (
             self.latest_timestamp if self.latest_timestamp != 0 else packet.time
         )
-        if (packet.time - last_timestamp) > constants.CLUMP_TIMEOUT:
+        if (Decimal(packet.time) - (Decimal(last_timestamp) / Decimal("1e6"))) > constants.CLUMP_TIMEOUT:
             self.update_active_idle(packet.time - last_timestamp)
 
     def update_active_idle(self, current_time):
@@ -256,12 +252,11 @@ class Flow:
             packet: Packet to be update active time
 
         """
-       
         if (current_time - self.last_active) > constants.ACTIVE_TIMEOUT:
             duration = abs(float(self.last_active - self.start_active))
             if duration > 0:
                 self.active.append(1e6 * duration)
-            self.idle.append(1e6 * (current_time - self.last_active))
+            self.idle.append(Decimal("1e6") * Decimal((current_time - self.last_active)))
             self.start_active = current_time
             self.last_active = current_time
         else:
