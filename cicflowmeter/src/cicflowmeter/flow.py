@@ -125,8 +125,8 @@ class Flow:
             " Packet Length Variance": float(packet_length.get_var()),
             " Fwd Header Length": flow_bytes.get_forward_header_bytes(),
             " Bwd Header Length": flow_bytes.get_reverse_header_bytes(),
-            "min_seg_size_forward": flow_bytes.get_min_forward_header_bytes(),
-            "act_data_pkt_fwd": packet_count.has_payload(PacketDirection.FORWARD),
+            " min_seg_size_forward": flow_bytes.get_min_forward_header_bytes(),
+            " act_data_pkt_fwd": packet_count.has_payload(PacketDirection.FORWARD),
             # Flows Interarrival Time
             " Flow IAT Mean": float(flow_iat["mean"]),
             " Flow IAT Max": float(flow_iat["max"]),
