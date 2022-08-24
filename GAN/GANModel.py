@@ -1,133 +1,12 @@
 import torch
 import torch.nn.functional as f
-from torch import nn
 import pandas as pd
-import numpy as np
-import torch
-from collections import OrderedDict
-
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import QuantileTransformer
-from sklearn.model_selection import train_test_split
+from NN_models import *
+from utils import *
 import matplotlib.pyplot as plt
 import wandb
+
 wandb.init(project="GAN", config={"hyper":"paramet"})
-
-
-def drop_function(df,features):
-    list_1=list(features["col_name"][:20])
-    for i in(list_1):
-        df=df.drop(i,axis=1)
-    n_features=len(list(df.columns))
-    return df,n_features
-
-def get_ohe_data(df):
-    
-    df_int = df.select_dtypes(['float', 'integer']).values
-    continuous_columns_list = list(df.select_dtypes(['float', 'integer']).columns)
-    ##############################################################
-    scaler = QuantileTransformer(n_quantiles=2000, output_distribution='uniform')
-    df_int = scaler.fit_transform(df_int)
-
-    df_cat = df.select_dtypes('object')
-    df_cat_names = list(df.select_dtypes('object').columns)
-    numerical_array = df_int
-    ohe = OneHotEncoder()
-    ohe_array = ohe.fit_transform(df_cat)
-
-    cat_lens = [i.shape[0] for i in ohe.categories_]
-    discrete_columns_ordereddict = OrderedDict(zip(df_cat_names, cat_lens))
-
-
-    final_array = np.hstack((numerical_array, ohe_array.toarray()))
-    return ohe, scaler, discrete_columns_ordereddict, continuous_columns_list, final_array
-
-
-def get_original_data(df_transformed, df_orig, ohe, scaler):
-    # df_int = df_orig.select_dtypes(['float','integer'])
-    df_ohe_int = df_transformed[:, :df_orig.select_dtypes(['float', 'integer']).shape[1]]
-    df_ohe_int = scaler.inverse_transform(df_ohe_int)
-  
-    # df_income = df_transformed[:,-1]
-    # df_ohe_cats = np.hstack((df_ohe_cats, df_income.reshape(-1,1)))
-    df_int = pd.DataFrame(df_ohe_int, columns=df_orig.select_dtypes(['float', 'integer']).columns)
-    return df_int
-
-
-def prepare_data(df, batch_size):
-    #df = pd.concat([df_train, df_test], axis=0)
-
-    ohe, scaler, discrete_columns, continuous_columns, df_transformed = get_ohe_data(df)
-
-
-    input_dim = df_transformed.shape[1]
-
-    #from sklearn.model_selection import train_test_split
-    #################
-    X_train, X_test = train_test_split(df_transformed,test_size=0.1, shuffle=True) #random_state=10)
-    #X_train = df_transformed[:df_train.shape[0],:]
-    #X_test = df_transformed[df_train.shape[0]:,:]
-
-    data_train = X_train.copy()
-    data_test = X_test.copy()
-
-    from torch.utils.data import TensorDataset
-    from torch.utils.data import DataLoader
-    data = torch.from_numpy(data_train).float()
-
-
-    train_ds = TensorDataset(data)
-    train_dl = DataLoader(train_ds, batch_size = batch_size, drop_last=True)
-    return ohe, scaler, input_dim, discrete_columns, continuous_columns ,train_dl, data_train, data_test
-
-
-class Generator(nn.Module):
-    def __init__(self, input_dim, continuous_columns, discrete_columns):
-        super(Generator, self).__init__()
-        self._input_dim = input_dim
-        self._discrete_columns = discrete_columns
-        self._num_continuous_columns = len(continuous_columns)
-
-        self.lin1 = nn.Linear(self._input_dim, self._input_dim)
-        self.lin_numerical = nn.Linear(self._input_dim, self._num_continuous_columns)
-
-        self.lin_cat = nn.ModuleDict()
-        for key, value in self._discrete_columns.items():
-            self.lin_cat[key] = nn.Linear(self._input_dim, value)
-        
-
-    def forward(self, x):
-        x = torch.relu(self.lin1(x))
-        # x = f.leaky_relu(self.lin1(x))
-        # x_numerical = f.leaky_relu(self.lin_numerical(x))
-        x_numerical = f.relu(self.lin_numerical(x))
-        x_cat = []
-        for key in self.lin_cat:
-            x_cat.append(f.gumbel_softmax(self.lin_cat[key](x), tau=0.2))
-        x_final = torch.cat((x_numerical, *x_cat), 1)
-        return x_final
-
-
-class Critic(nn.Module):
-    def __init__(self, input_dim):
-        super(Critic, self).__init__()
-        self._input_dim = input_dim
-        # self.dense1 = nn.Linear(109, 256)
-        self.dense1 = nn.Linear(self._input_dim, self._input_dim)
-        self.dense2 = nn.Linear(self._input_dim, self._input_dim)
-        # self.dense3 = nn.Linear(256, 1)
-        # self.drop = nn.Dropout(p=0.2)
-        # self.activation = nn.Sigmoid()
-
-    def forward(self, x):
-        x = f.leaky_relu(self.dense1(x))
-        # x = self.drop(x)
-        # x = f.leaky_relu(self.dense2(x))
-        x = f.leaky_relu(self.dense2(x))
-        # x = self.drop(x)
-        return x
-
 
 device = torch.device("cuda:0" if (torch.cuda.is_available() and 1 > 0) else "cpu")
 
@@ -302,7 +181,7 @@ batch_size=64
 
 df=pd.read_csv("combined.csv")
 fe=pd.read_csv("DDoS_Functional_Features.csv")
-# df=df.loc[df['Label']==1]
+# df=df.loc[df['Label']==1]s
 # df=df.drop("Label",axis=1)
 # df,n=drop_function(df,fe)
 
