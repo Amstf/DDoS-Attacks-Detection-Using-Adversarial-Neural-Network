@@ -34,27 +34,27 @@ if gpus:
     except RuntimeError as e:
         #,e,pry growth must be set before GPUs have been initialized
         print(e)
-def drop_d(df,features):
-    list_1=list(features["col_name"][:20])
-    for i in(list_1):
-        df=df.drop(i,axis=1)
-    return df
+# def drop_d(df,features):
+#     list_1=list(features["col_name"][:20])
+#     for i in(list_1):
+#         df=df.drop(i,axis=1)
+#     return df
 
-def get_real_data(data_path):
-    df=pd.read_csv(data_path)
-    df=df.loc[df["Label"]==1]
-    df=df.iloc[:8000]
-    df.drop("Label",axis=1)
-    df["Label"]=0
-    return df
+# def get_real_data(data_path):
+#     df=pd.read_csv(data_path)
+#     df=df.loc[df["Label"]==1]
+#     df=df.iloc[:8000]
+#     df.drop("Label",axis=1)
+#     df["Label"]=0
+#     return df
 
-def get_fake_data(data_path):
-    df=pd.read_csv(data_path)
-    df["Label"]=1
-    return df
+# def get_fake_data(data_path):
+#     df=pd.read_csv(data_path)
+#     df["Label"]=1
+#     return df
 
-def get_combined_data(real_df,fake_df):
-    return pd.concat([real_df, fake_df], axis=0)
+# def get_combined_data(real_df,fake_df):
+#     return pd.concat([real_df, fake_df], axis=0)
 
 def wandb_login():
     wandb.login()

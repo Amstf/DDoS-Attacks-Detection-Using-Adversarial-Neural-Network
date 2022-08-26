@@ -48,3 +48,33 @@ def data_split(df):
     print("test data length:", len(X_test))
 
     return X_train , X_test, y_train , y_test
+
+def pre_processing(X_train , X_test, y_train , y_test):
+
+    scaler= MinMaxScaler()
+    le = LabelEncoder()
+
+    X_train=scaler.fit_transform(X_train)
+    X_test=scaler.transform(X_test)
+
+    # print("intances per label in training set \n",y_train.value_counts())
+    y_train=le.fit_transform(y_train)
+
+    # print("intances per label in test set \n",y_test.value_counts())
+    y_test=le.fit_transform(y_test)
+
+    print(X_train.shape)
+    print(X_test.shape)
+
+    y_train = np.asarray(y_train).astype("float32").reshape((-1,1))
+    y_test = np.asarray(y_test).astype("float32").reshape((-1,1))
+    
+
+    # reshape input data to LSTM format [samples , time_steps, features]
+    X_train = X_train.reshape(X_train.shape[0], 1, X_train.shape[1])
+    X_test = X_test.reshape(X_test.shape[0], 1, X_test.shape[1])
+   
+    # print(f"shape of X_train:", X_train.shape)
+    # print(f"shape of X_test:", X_test.shape)
+
+    return X_train , X_test, y_train , y_test
