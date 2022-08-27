@@ -26,46 +26,21 @@ from wandb.keras import WandbCallback
 gpus=tf.config.experimental.list_physical_devices('GPU')
 if gpus:
     try:
-        #currentlu, memory growth needs to be the same across GPUs
         for gpu in gpus:
             tf.config.experimental.set_memory_growth(gpu,True)
         logical_gpus=tf.config.experimental.list_logical_devices('GPU')
         print(len(gpus),"Phusical GPUs", len(logical_gpus),"Logical GPUS")
     except RuntimeError as e:
-        #,e,pry growth must be set before GPUs have been initialized
         print(e)
-# def drop_d(df,features):
-#     list_1=list(features["col_name"][:20])
-#     for i in(list_1):
-#         df=df.drop(i,axis=1)
-#     return df
 
-# def get_real_data(data_path):
-#     df=pd.read_csv(data_path)
-#     df=df.loc[df["Label"]==1]
-#     df=df.iloc[:8000]
-#     df.drop("Label",axis=1)
-#     df["Label"]=0
-#     return df
-
-# def get_fake_data(data_path):
-#     df=pd.read_csv(data_path)
-#     df["Label"]=1
-#     return df
-
-# def get_combined_data(real_df,fake_df):
-#     return pd.concat([real_df, fake_df], axis=0)
 
 def wandb_login():
     wandb.login()
     wandb.init(project="Real_Fake", config={"hyper":"paramet"})
 
 def data_split(df):
-    
     y=df.Label
-    X=df.drop(columns=["Label"])
-    # X=df[columns]
-    
+    X=df.drop(columns=["Label"])    
     labels=y.unique()
     classes=y.nunique()
 
