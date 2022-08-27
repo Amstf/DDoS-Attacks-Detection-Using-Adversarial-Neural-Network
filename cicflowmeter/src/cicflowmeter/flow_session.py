@@ -11,10 +11,11 @@ from .flow import Flow
 import pandas as pd
 import tensorflow as tf
 
-
+import numpy as np
 EXPIRED_UPDATE = 40
 MACHINE_LEARNING_API = "http://localhost:8000/predict"
 GARBAGE_COLLECT_PACKETS = 100
+
 
 class FlowSession(DefaultSession):
     """Creates a list of network flows."""
@@ -119,11 +120,16 @@ class FlowSession(DefaultSession):
         
     def garbage_collect(self, latest_time) -> None:
         # TODO: Garbage Collection / Feature Extraction should have a separate thread
-        model= load_model('model-best.h5')
-        print(model.summary())
+        # model= load_model('model-best.h5')
+        # print(model.summary())
+
+        from queue import Queue
+        my_queue = Queue(maxsize=0)
+
         if not self.url_model:
             print("Garbage Collection Began. Flows = {}".format(len(self.flows)))
         keys = list(self.flows.keys())
+        
         for k in keys:
             flow = self.flows.get(k)
 
@@ -133,6 +139,7 @@ class FlowSession(DefaultSession):
                 or flow.duration > 90
             ):
                 data = flow.get_data()
+                # print(data)
 
                 # POST Request to Model API
                 if self.url_model:
@@ -165,14 +172,17 @@ class FlowSession(DefaultSession):
                         )
                     )
                 keys= [' Min Packet Length', 'Init_Win_bytes_forward', ' Fwd Packet Length Min', ' Destination Port', ' min_seg_size_forward', ' Average Packet Size', ' Init_Win_bytes_backward', ' Total Fwd Packets', 'Flow Bytes/s', ' Flow IAT Min', ' Packet Length Mean', 'Subflow Fwd Packets', ' Bwd Packets/s', 'Bwd IAT Total', ' Max Packet Length', ' Bwd IAT Max', ' Subflow Bwd Packets', ' Bwd Header Length', ' Fwd Packet Length Mean', ' Fwd Header Length']
-                data = {x:data[x] for x in keys}
+                datas = {x:data[x] for x in keys}
+                numpyArray = np.array(list(datas.values())).astype(float)
+                my_queue.put(numpyArray)
+                print(my_queue.get())
+                
                 # print(data.values())
-                if self.csv_line == 0:
-                    self.csv_writer.writerow(data.keys())
-                display(data)
+                # if self.csv_line == 0:
+                #     self.csv_writer.writerow(data.keys())
 
-                self.csv_writer.writerow(data.values())
-                self.csv_line += 1
+                # self.csv_writer.writerow(data.values())
+                # self.csv_line += 1
 
                 del self.flows[k]
         if not self.url_model:
@@ -180,6 +190,7 @@ class FlowSession(DefaultSession):
 
 
 def generate_session_class(output_mode, output_file, url_model):
+    print("start")
     return type(
         "NewFlowSession",
         (FlowSession,),
@@ -194,5 +205,10 @@ def load_model(model_path):
     model.compile(loss="sparse_categorical_crossentropy", optimizer='Adam',metrics=['accuracy'])
     return model
 
-def display(data):
-    print(data)
+def predict(model,data):
+    res = res.reshape(res.shape[0], 1, res.shape[1])
+    y_test_pred_prob = model.predict(res, verbose=1)
+    y_test_pred = np.argmax(y_test_pred_prob, axis=1)
+    if y_test_pred==1:
+
+
