@@ -147,7 +147,7 @@ modifications=[0,8,16,20]
 data_path="combined.csv"
 dataset=pd.read_csv(data_path)
 
-model_path=("wandb/Real_fake/files/model-best.h5")
+model_path=("model-best.h5")
 print(len(list(dataset.columns)))
 print(dataset.head(5))
 n_features=len(list(dataset.drop(columns=["Label"]).columns))
