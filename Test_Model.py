@@ -21,44 +21,6 @@ def FF(df,features):
     ds=pd.DataFrame()
     ds=df[list_1]
     return ds
-# global parameter 
-data_path="combined.csv"
-dataset=pd.read_csv(data_path)
-
-model_path=("wandb/Real_fake/files/model-best.h5")
-print(len(list(dataset.columns)))
-print(dataset.head(5))
-n_features=len(list(dataset.drop(columns=["Label"]).columns))
-
-def pre_processing(X_train , X_test, y_train , y_test):
-
-    scaler= MinMaxScaler()
-    le = LabelEncoder()
-
-    X_train=scaler.fit_transform(X_train)
-    X_test=scaler.transform(X_test)
-
-    print("intances per label in training set \n",y_train.value_counts())
-    y_train=le.fit_transform(y_train)
-
-    print("intances per label in test set \n",y_test.value_counts())
-    y_test=le.fit_transform(y_test)
-
-    print(X_train.shape)
-    print(X_test.shape)
-
-    y_train = np.asarray(y_train).astype("float32").reshape((-1,1))
-    y_test = np.asarray(y_test).astype("float32").reshape((-1,1))
-
-    # reshape input data to LSTM format [samples , time_steps, features]
-    X_train = X_train.reshape(X_train.shape[0], 1, X_train.shape[1])
-    X_test = X_test.reshape(X_test.shape[0], 1, X_test.shape[1])
-
-    print(f"shape of X_train:", X_train.shape)
-    print(f"shape of X_test:", X_test.shape)
-
-    return X_train , X_test, y_train , y_test
-
 
 def load_model(model_path):
     # restore the model file "model.h5" from a specific run by user "alimustapha"
@@ -182,8 +144,13 @@ modifications=[0,8,16,20]
 # y_test_pred_prob = model.predict(X_train, verbose=1)
 # y_test_pred = np.argmax(y_test_pred_prob, axis=1)
 
-# plot_cm(y_train, y_test_pred)
+data_path="combined.csv"
+dataset=pd.read_csv(data_path)
 
+model_path=("wandb/Real_fake/files/model-best.h5")
+print(len(list(dataset.columns)))
+print(dataset.head(5))
+n_features=len(list(dataset.drop(columns=["Label"]).columns))
 for i in modifications:
   df=modification(i)
   y_test,y_pred,y_test_pred_prob=test_model(model_path,df)

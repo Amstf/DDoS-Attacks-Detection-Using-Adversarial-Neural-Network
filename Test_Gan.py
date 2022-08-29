@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns  
 from keras.callbacks import ModelCheckpoint
 from IDSTraining import data_split
+from utils import *
 
 gpus=tf.config.experimental.list_physical_devices('GPU')
 if gpus:
