@@ -7,6 +7,7 @@ import tensorflow as tf
 from tensorflow.keras import  Sequential,Input, backend
 from tensorflow.keras.layers import LSTM , Dense , Dropout 
 from tensorflow.keras.callbacks import EarlyStopping
+from utils import *
 
 
 import wandb
@@ -56,17 +57,17 @@ def train_model(model, X_train , y_train ):
     # "model.h5" is saved in wandb.run.dir & will be uploaded at the end of training
     model.save(os.path.join(wandb.run.dir, "model.h5"))
 
-# fe=pd.read_csv("/home/infres/amustapha/DDoS/GAN/DDoS_Functional_Features.csv")
+fe=pd.read_csv("/home/infres/amustapha/DDoS/GAN/DDoS_Functional_Features.csv")
 
-# data_path="combined.csv"
-# dataset= read_data(data_path)
-# dataset=drop_d(dataset,fe)
-# a=len(dataset.columns)
-# X_train , X_test, y_train , y_test = data_split(dataset)
-# X_train , X_test, y_train , y_test = pre_processing(X_train , X_test, y_train , y_test)
-# del(dataset)
-# model = build_LSTM_model(38, 2)
-# wandb_login()
-# train_model(model, X_train , y_train)
+data_path="combined.csv"
+dataset= pd.read_csv(data_path)
+dataset=drop_d(dataset,fe)
+a=len(dataset.columns)
+X_train , X_test, y_train , y_test = data_split(dataset)
+X_train , X_test, y_train , y_test = pre_processing(X_train , X_test, y_train , y_test)
+del(dataset)
+model = build_LSTM_model(38, 2)
+wandb_login()
+train_model(model, X_train , y_train)
 
     

@@ -2,6 +2,8 @@
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder, MinMaxScaler
+
 
 def drop_d(df,features):
     list_1=list(features["col_name"][:20])
