@@ -63,9 +63,7 @@ def plot_cm(y_true, y_pred, figsize=(10,10)):
 
 
 
-# Label_mean = dataset.Label.mean()
-# dataset['Label'] = dataset['Label'] > Label_mean
-# dataset["Label"] = dataset["Label"].astype(int)
+
 def test_model(model_path,poly_df):
   X=poly_df.iloc[:, :-1 ].to_numpy()
   y = poly_df.iloc[:,-1].to_numpy()
@@ -80,8 +78,8 @@ def test_model(model_path,poly_df):
   print("after spliting the data:\n")
   print("training data length:", len(X_train))
   print("test data length:", len(X_test))
-  # print(y_train.nunique())
-  # print(y_train.value_counts())
+
+
   ### reshape input data to LSTM format [samples, time_steps, features]
   X_train_lstm = X_train.reshape(X_train.shape[0], 1, X_train.shape[1])
   X_test_lstm = X_test.reshape(X_test.shape[0], 1, X_test.shape[1])
@@ -126,23 +124,7 @@ result_df.insert(0,"y_Test" , y_test)
 modifications=[0,8,16,20]
 
 
-# data_path="combined.csv"
-# real=get_real_data(data_path)
-# real=drop_d(real,fe)
-# fake=get_fake_data("Results/generatedData.csv")
-# dataset=get_combined_data(real,fake)
 
-# X_train , X_test, y_train , y_test = data_split(dataset)
-# X_train , X_test, y_train , y_test = pre_processing(X_train , X_test, y_train , y_test)
-# # loading model
-# model = load_model(model_path)
-# print("model Loaded")
-
-
-# # predicting on test set
-# print("making pridtction")
-# y_test_pred_prob = model.predict(X_train, verbose=1)
-# y_test_pred = np.argmax(y_test_pred_prob, axis=1)
 
 data_path="combined.csv"
 dataset=pd.read_csv(data_path)
