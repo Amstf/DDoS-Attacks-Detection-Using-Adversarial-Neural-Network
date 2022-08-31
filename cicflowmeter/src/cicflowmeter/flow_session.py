@@ -10,6 +10,7 @@ from .features.context.packet_flow_key import get_packet_flow_key
 from .flow import Flow
 import pandas as pd
 import tensorflow as tf
+from queue import Queue
 
 import numpy as np
 EXPIRED_UPDATE = 40
@@ -115,6 +116,27 @@ class FlowSession(DefaultSession):
 
     def get_flows(self) -> list:
         return self.flows.values()
+    def gfg(self,model,data_queue):
+        keys= [' Min Packet Length', 'Init_Win_bytes_forward', ' Fwd Packet Length Min', ' Destination Port', ' min_seg_size_forward', ' Average Packet Size', ' Init_Win_bytes_backward', ' Total Fwd Packets', 'Flow Bytes/s', ' Flow IAT Min', ' Packet Length Mean', 'Subflow Fwd Packets', ' Bwd Packets/s', 'Bwd IAT Total', ' Max Packet Length', ' Bwd IAT Max', ' Subflow Bwd Packets', ' Bwd Header Length', ' Fwd Packet Length Mean', ' Fwd Header Length']
+        print("pridiction!!")
+        for i in range(5):
+            data=data_queue.get()
+            res = {x:data[x] for x in keys}
+            res = np.array(list(res.values())).astype(float)
+            res = res.reshape(res.shape[0], 1, res.shape[1])
+            y_test_pred_prob = model.predict(res, verbose=1)
+            y_test_pred = np.argmax(y_test_pred_prob, axis=1)
+            print(y_test_pred)
+            if y_test_pred==0:
+                print("Normal")
+                if self.csv_line == 0:
+                    self.csv_writer.writerow(data.keys())
+
+
+                self.csv_writer.writerow(data.values())
+                self.csv_line += 1
+            else:
+                print("DDoS!!")
 
 
         
@@ -123,8 +145,9 @@ class FlowSession(DefaultSession):
         # model= load_model('model-best.h5')
         # print(model.summary())
 
-        from queue import Queue
-        my_queue = Queue(maxsize=0)
+        data_queue = Queue(maxsize=0)
+        datas_queue = Queue(maxsize=0)
+
 
         if not self.url_model:
             print("Garbage Collection Began. Flows = {}".format(len(self.flows)))
@@ -171,11 +194,21 @@ class FlowSession(DefaultSession):
                             resp["probability"].pop()[result] * 100,
                         )
                     )
-                keys= [' Min Packet Length', 'Init_Win_bytes_forward', ' Fwd Packet Length Min', ' Destination Port', ' min_seg_size_forward', ' Average Packet Size', ' Init_Win_bytes_backward', ' Total Fwd Packets', 'Flow Bytes/s', ' Flow IAT Min', ' Packet Length Mean', 'Subflow Fwd Packets', ' Bwd Packets/s', 'Bwd IAT Total', ' Max Packet Length', ' Bwd IAT Max', ' Subflow Bwd Packets', ' Bwd Header Length', ' Fwd Packet Length Mean', ' Fwd Header Length']
-                datas = {x:data[x] for x in keys}
-                numpyArray = np.array(list(datas.values())).astype(float)
-                my_queue.put(numpyArray)
-                print(my_queue.get())
+                
+
+              
+                # print(data)
+
+                data_queue.put(data)
+                if (data_queue.qsize()>=5):
+                    timer = threading.Timer(2.0, self.gfg,args=(data_queue,))
+                    timer.start()                    
+                else:
+                    print("size of queue = ",data_queue.qsize())
+            
+
+                
+                
                 
                 # print(data.values())
                 # if self.csv_line == 0:
@@ -205,10 +238,8 @@ def load_model(model_path):
     model.compile(loss="sparse_categorical_crossentropy", optimizer='Adam',metrics=['accuracy'])
     return model
 
-def predict(model,data):
-    res = res.reshape(res.shape[0], 1, res.shape[1])
-    y_test_pred_prob = model.predict(res, verbose=1)
-    y_test_pred = np.argmax(y_test_pred_prob, axis=1)
-    if y_test_pred==1:
+
+
+
 
 
