@@ -210,4 +210,5 @@ def predict(model,data):
     y_test_pred_prob = model.predict(res, verbose=1)
     y_test_pred = np.argmax(y_test_pred_prob, axis=1)
     if y_test_pred==1:
-        print("DDOS!")
+
+
