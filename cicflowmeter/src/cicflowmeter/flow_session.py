@@ -118,31 +118,38 @@ class FlowSession(DefaultSession):
         return self.flows.values()
     def gfg(self,model,data_queue):
         keys= [' Min Packet Length', 'Init_Win_bytes_forward', ' Fwd Packet Length Min', ' Destination Port', ' min_seg_size_forward', ' Average Packet Size', ' Init_Win_bytes_backward', ' Total Fwd Packets', 'Flow Bytes/s', ' Flow IAT Min', ' Packet Length Mean', 'Subflow Fwd Packets', ' Bwd Packets/s', 'Bwd IAT Total', ' Max Packet Length', ' Bwd IAT Max', ' Subflow Bwd Packets', ' Bwd Header Length', ' Fwd Packet Length Mean', ' Fwd Header Length']
-        print("pridiction!!")
         for i in range(5):
             data=data_queue.get()
+            key=data.keys(),",Prediction"
+            
+            normal=data.values(),",Normal"
+            DDoS=data.values(),",DDoS"
             res = {x:data[x] for x in keys}
             res = np.array(list(res.values())).astype(float)
-            res = res.reshape(res.shape[0], 1, res.shape[1])
-            y_test_pred_prob = model.predict(res, verbose=1)
+            res = res.reshape(1, 1,res.shape[0])
+    
+            y_test_pred_prob = model.predict(res, verbose=0)
             y_test_pred = np.argmax(y_test_pred_prob, axis=1)
-            print(y_test_pred)
+         
             if y_test_pred==0:
-                print("Normal")
-                if self.csv_line == 0:
-                    self.csv_writer.writerow(data.keys())
-
-
-                self.csv_writer.writerow(data.values())
-                self.csv_line += 1
+                pass
             else:
-                print("DDoS!!")
+                try:
+                    with open("test.csv", 'w') as csvfile:
+                        writer = csv.DictWriter(csvfile, fieldnames=csv_columns)
+                        writer.writeheader()
+                        for data in dict:
+                            writer.writerow(data)
+                
+                except IOError:
+                    print("I/O error")
+                            
 
 
         
     def garbage_collect(self, latest_time) -> None:
         # TODO: Garbage Collection / Feature Extraction should have a separate thread
-        # model= load_model('model-best.h5')
+        model= load_model('model-best.h5')
         # print(model.summary())
 
         data_queue = Queue(maxsize=0)
@@ -201,7 +208,7 @@ class FlowSession(DefaultSession):
 
                 data_queue.put(data)
                 if (data_queue.qsize()>=5):
-                    timer = threading.Timer(2.0, self.gfg,args=(data_queue,))
+                    timer = threading.Timer(2.0, self.gfg,args=(model,data_queue,))
                     timer.start()                    
                 else:
                     print("size of queue = ",data_queue.qsize())
