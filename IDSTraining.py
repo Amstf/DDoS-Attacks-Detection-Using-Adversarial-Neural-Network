@@ -61,7 +61,7 @@ fe=pd.read_csv("/home/infres/amustapha/DDoS/GAN/DDoS_Functional_Features.csv")
 
 data_path="combined.csv"
 dataset= pd.read_csv(data_path)
-dataset=drop_d(dataset,fe)
+dataset=drop_FF(dataset,fe)
 a=len(dataset.columns)
 X_train , X_test, y_train , y_test = data_split(dataset)
 X_train , X_test, y_train , y_test = pre_processing(X_train , X_test, y_train , y_test)

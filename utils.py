@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder, MinMaxScaler
 
 
-def drop_d(df,features):
+def drop_FF(df,features):
     list_1=list(features["col_name"][:20])
     for i in(list_1):
         df=df.drop(i,axis=1)
