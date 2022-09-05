@@ -116,25 +116,25 @@ def train_model(model, X_train , y_train ):
     # "model.h5" is saved in wandb.run.dir & will be uploaded at the end of training
     model.save(os.path.join(wandb.run.dir, "model.h5"))
 
-fe=pd.read_csv("/home/infres/amustapha/DDoS/GAN/DDoS_Functional_Features.csv")
+# fe=pd.read_csv("/home/infres/amustapha/DDoS/GAN/DDoS_Functional_Features.csv")
     
-fe=pd.read_csv("DDoS_Functional_Features.csv")
+# fe=pd.read_csv("DDoS_Functional_Features.csv")
 
-data_path="combined.csv"
-real=get_real_data(data_path)
-fake=get_fake_data("Results/generatedAllclasses.csv")
+# data_path="combined.csv"
+# real=get_real_data(data_path)
+# fake=get_fake_data("Results/generatedAllclasses.csv")
 
-real=drop_d(real,fe)
+# real=drop_d(real,fe)
 
-fake=drop_d(fake,fe)
+# fake=drop_d(fake,fe)
 
-dataset=get_combined_data(real,fake)
+# dataset=get_combined_data(real,fake)
 
-X_train , X_test, y_train , y_test = data_split(dataset)
-X_train , X_test, y_train , y_test = pre_processing(X_train , X_test, y_train , y_test)
+# X_train , X_test, y_train , y_test = data_split(dataset)
+# X_train , X_test, y_train , y_test = pre_processing(X_train , X_test, y_train , y_test)
 
-model = build_LSTM_model(38, 2)
-wandb_login()
-train_model(model, X_train , y_train)
+# model = build_LSTM_model(38, 2)
+# wandb_login()
+# train_model(model, X_train , y_train)
 
     
