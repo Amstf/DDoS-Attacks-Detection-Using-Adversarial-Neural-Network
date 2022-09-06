@@ -14,13 +14,7 @@ import plotly.graph_objects as go
 
 # from IDSTraining import data_split
 from LSTMforReal import *
-def FF(df,features):
-
-    list_1=list(features["col_name"][:20])
-    list_1.append('Label')
-    ds=pd.DataFrame()
-    ds=df[list_1]
-    return ds
+from utils import *
 
 def load_model(model_path):
     # restore the model file "model.h5" from a specific run by user "alimustapha"

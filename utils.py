@@ -3,13 +3,20 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder, MinMaxScaler
-
+import wandb
 
 def drop_FF(df,features):
     list_1=list(features["col_name"][:20])
     for i in(list_1):
         df=df.drop(i,axis=1)
     return df
+def get_FF(df,features):
+
+    list_1=list(features["col_name"][:20])
+    list_1.append('Label')
+    ds=pd.DataFrame()
+    ds=df[list_1]
+    return ds
 
 def get_real_data(data_path):
     df=pd.read_csv(data_path)
@@ -26,11 +33,11 @@ def get_fake_data(data_path):
 
 def get_combined_data(real_df,fake_df):
     return pd.concat([real_df, fake_df], axis=0)
-def data_split(df):
+def data_split(df,test_size = 0.3):
     
     y=df.Label
     X=df.drop(columns=["Label"])
-    # X=df[columns]
+
     
     labels=y.unique()
     classes=y.nunique()
@@ -41,8 +48,8 @@ def data_split(df):
     print("instances per label\n", y.value_counts())
     print("label",labels)
     
-    # split the dataset into 80% for training and 20% for testing
-    X_train , X_test, y_train , y_test = train_test_split(X,y, random_state=42 , stratify=y, shuffle=True,test_size=0.2)
+    # split the dataset into (100-(test_size*100)%) for training and (test_size*100)% for testing
+    X_train , X_test, y_train , y_test = train_test_split(X,y, random_state=42 , stratify=y, shuffle=True,test_size=test_size)
 
 
     print("after spliting the data :\n")
@@ -80,3 +87,7 @@ def pre_processing(X_train , X_test, y_train , y_test):
     # print(f"shape of X_test:", X_test.shape)
 
     return X_train , X_test, y_train , y_test
+
+def wandb_login(project_name):
+    wandb.login()
+    wandb.init(project=project_name, config={"hyper":"paramet"})
