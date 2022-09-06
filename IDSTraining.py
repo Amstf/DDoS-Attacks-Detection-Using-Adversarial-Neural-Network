@@ -8,9 +8,6 @@ from tensorflow.keras import  Sequential,Input, backend
 from tensorflow.keras.layers import LSTM , Dense , Dropout 
 from tensorflow.keras.callbacks import EarlyStopping
 from utils import *
-
-
-import wandb
 from wandb.keras import WandbCallback
 gpus=tf.config.experimental.list_physical_devices('GPU')
 if gpus:
@@ -24,9 +21,7 @@ if gpus:
         #,e,pry growth must be set before GPUs have been initialized
         print(e)
 
-def wandb_login():
-    wandb.login()
-    wandb.init(project="without_features", config={"hyper":"paramet"})
+
 
     
 
