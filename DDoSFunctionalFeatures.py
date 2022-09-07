@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-data_path="combined.csv
+data_path="combined.csv"
 output_path="DDoS_Functional_Features.csv"
 def getFunctionalFeatures(data_path,FF_path):
     dataset=pd.read_csv(data_path)
