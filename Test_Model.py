@@ -2,33 +2,29 @@ import pandas as pd
 import numpy as np
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import  LabelEncoder, MinMaxScaler
-from sklearn.metrics import roc_curve , auc
 from sklearn.metrics import confusion_matrix, classification_report
 import matplotlib.pyplot as plt
 import seaborn as sns  
 from plotly import express as px
 from plotly import graph_objects as go
-from plotly.subplots import make_subplots
 import plotly.graph_objects as go
+from sklearn.metrics import roc_curve, roc_auc_score
+
 
 # from IDSTraining import data_split
-from LSTMforReal import *
+
 from utils import *
 
 def load_model(model_path):
     # restore the model file "model.h5" from a specific run by user "alimustapha"
-    # in project "save_and_restore" from run "23yow4re"
-
     # use the "name" attribute of the returned object if your framework expects a filename, e.g. as in Keras
     model = tf.keras.models.load_model(model_path)
-
     # Check its architecture
     print(model.summary())
     model.compile(loss="sparse_categorical_crossentropy", optimizer='Adam',metrics=['accuracy'])
     print("**************************MODEL COMPILED**************************")
-
     return model
+
 def plot_cm(y_true, y_pred, figsize=(10,10)):
     cm = confusion_matrix(y_true, y_pred, labels=np.unique(y_true))
     cm_sum = np.sum(cm, axis=1, keepdims=True)
@@ -131,7 +127,6 @@ for i in modifications:
   df=modification(i)
   y_test,y_pred,y_test_pred_prob=test_model(model_path,df)
   result_df.insert(1,"Y_{}".format(i), y_test_pred_prob[:, 1 ])
-from sklearn.metrics import roc_curve, roc_auc_score
 
 aur_roc_data = []
 
