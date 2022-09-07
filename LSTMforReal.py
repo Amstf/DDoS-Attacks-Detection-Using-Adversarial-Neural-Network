@@ -56,12 +56,12 @@ def build_LSTM_model(n_features,n_classes):
     return model
 
 
-def train_model(model, X_train , y_train ):
+def train_model(model, X_train , y_train,epochs=30,batch_size=32,validation_split=0.2 ):
     
     callback = EarlyStopping(patience=20, mode='min', restore_best_weights=True)
     backend.clear_session()
     history = model.fit(X_train,y_train, 
-                        epochs=30, batch_size=32, validation_split=0.2, callbacks=[callback,WandbCallback()])
+                        epochs=epochs, batch_size=batch_size, validation_split=validation_split, callbacks=[callback,WandbCallback()])
     # "model.h5" is saved in wandb.run.dir & will be uploaded at the end of training
     model.save(os.path.join(wandb.run.dir, "model.h5"))
 
