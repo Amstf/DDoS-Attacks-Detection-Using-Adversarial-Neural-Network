@@ -25,7 +25,7 @@ def load_model(model_path):
     print("**************************MODEL COMPILED**************************")
     return model
 
-def plot_cm(y_true, y_pred, figsize=(10,10)):
+def plot_cm(y_true, y_pred, figsize=(10,10),output_path="Real_Fake_LSTM.png"):
     cm = confusion_matrix(y_true, y_pred, labels=np.unique(y_true))
     cm_sum = np.sum(cm, axis=1, keepdims=True)
     cm_perc = cm / cm_sum.astype(float) * 100
@@ -47,7 +47,7 @@ def plot_cm(y_true, y_pred, figsize=(10,10)):
     cm.columns.name = 'Predicted'
     fig, ax = plt.subplots(figsize=figsize)
     sns.heatmap(cm, cmap= "YlGnBu", annot=annot, fmt='', ax=ax)
-    plt.savefig("Real_Fake_LSTM.png")
+    plt.savefig(output_path)
     print(classification_report(y_true, y_pred))
     print(cm)
 
