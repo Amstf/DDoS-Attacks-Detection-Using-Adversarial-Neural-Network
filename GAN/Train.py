@@ -1,36 +1,16 @@
 import torch
 import torch.nn.functional as f
 import pandas as pd
-from NN_models import *
-from utils import *
 import matplotlib.pyplot as plt
-import wandb
+from GAN_utils import *
+from NN_models import *
 
-wandb.init(project="GAN", config={"hyper":"paramet"})
 
 device = torch.device("cuda:0" if (torch.cuda.is_available() and 1 > 0) else "cpu")
 
-def get_gradient(crit, real, fake, epsilon):
-    mixed_data = real * epsilon + fake * (1 - epsilon)
-
-    mixed_scores = crit(mixed_data)
-
-    gradient = torch.autograd.grad(
-        inputs=mixed_data,
-        outputs=mixed_scores,
-        grad_outputs=torch.ones_like(mixed_scores),
-        create_graph=True,
-        retain_graph=True,
-    )[0]
-    return gradient
 
 
-def gradient_penalty(gradient):
-    gradient = gradient.view(len(gradient), -1)
-    gradient_norm = gradient.norm(2, dim=1)
 
-    penalty = torch.mean((gradient_norm - 1) ** 2)
-    return penalty
 
 
 def get_gen_loss(crit_fake_pred):
@@ -50,24 +30,14 @@ display_step = 50
 
 
 def train(df, epochs=500, batch_size=32):
-    ohe, scaler, input_dim, discrete_columns, continuous_columns, train_dl, data_train, data_test = prepare_data(df, batch_size)
+    ohe, scaler, input_dim, discrete_columns, continuous_columns, train_dl, data_train, data_test =prepare_data(df, batch_size)
 
     generator = Generator(input_dim, continuous_columns, discrete_columns).to(device)
     critic = Critic(input_dim).to(device)
-    #second_critic = FairLossFunc(S_start_index, Y_start_index, underpriv_index, priv_index, undesire_index, desire_index).to(device)
-
     gen_optimizer = torch.optim.Adam(generator.parameters(), lr=0.0002, betas=(0.5, 0.999))
     crit_optimizer = torch.optim.Adam(critic.parameters(), lr=0.0002, betas=(0.5, 0.999))
-    # generator = torch.load("Results/GeneratorAllData.pth")
-    # critic = torch.load("Results/CriticAllDatapth")
-    # wandb.watch(critic,log_freq=100)
-    # wandb.watch(generator,log_freq=100)
-
-    
     print("model = ", gen_optimizer)
     print("optimizer = ", gen_optimizer)
-
-
 
     # loss = nn.BCELoss()
     critic_losses = []
