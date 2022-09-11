@@ -7,6 +7,8 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import QuantileTransformer
 from sklearn.model_selection import train_test_split
 
+from torch.utils.data import TensorDataset
+from torch.utils.data import DataLoader
 
 
 def drop_function(df,features):
@@ -24,7 +26,7 @@ def get_ohe_data(df):
     scaler = QuantileTransformer(n_quantiles=2000, output_distribution='uniform')
     df_int = scaler.fit_transform(df_int)
 
-    df_cat = df.select_dtypes('object')
+    df_cat = df.select_dtypes('object') 
     df_cat_names = list(df.select_dtypes('object').columns)
     numerical_array = df_int
     ohe = OneHotEncoder()
@@ -66,8 +68,6 @@ def prepare_data(df, batch_size):
     data_train = X_train.copy()
     data_test = X_test.copy()
 
-    from torch.utils.data import TensorDataset
-    from torch.utils.data import DataLoader
     data = torch.from_numpy(data_train).float()
 
 
