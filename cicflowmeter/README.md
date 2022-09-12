@@ -1,6 +1,6 @@
 # Python CICFlowMeter
 
-> This project is cloned from [Python Wrapper CICflowmeter](https://gitlab.com/hieulw/cicflowmeter) and customized to fit my need.(Implementation of real time IDS in order to detect DDoS attack in the netwrok traffic)
+> This project is cloned from [Python Wrapper CICflowmeter](https://gitlab.com/hieulw/cicflowmeter) and customized to fit my need.(Implementation of real time IDS in order to detect DDoS attack in the network traffic)
 
 
 
