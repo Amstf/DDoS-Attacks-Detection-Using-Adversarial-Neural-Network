@@ -65,7 +65,7 @@ def train(df, epochs=500, batch_size=32):
 
                 epsilon = torch.rand(batch_size, input_dim, device=device, requires_grad=True)
                 gradient = get_gradient(critic, data[0], fake.detach(), epsilon)
-                gp = gradient_penalty(gradient)
+                gp = get_gradient_penalty(gradient)
 
                 crit_loss = get_crit_loss(crit_fake_pred, crit_real_pred, gp, c_lambda=10)
 

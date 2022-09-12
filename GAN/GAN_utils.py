@@ -89,7 +89,7 @@ def get_gradient(crit, real, fake, epsilon):
     )[0]
     return gradient
 
-def gradient_penalty(gradient):
+def get_gradient_penalty(gradient):
     gradient = gradient.view(len(gradient), -1)
     gradient_norm = gradient.norm(2, dim=1)
 
