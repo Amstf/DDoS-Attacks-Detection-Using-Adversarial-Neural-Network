@@ -4,14 +4,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from GAN_utils import *
 from NN_models import *
-
-
 device = torch.device("cuda:0" if (torch.cuda.is_available() and 1 > 0) else "cpu")
 
-
-
-
-
+display_step = 50
 
 def get_gen_loss(crit_fake_pred):
     gen_loss = -1. * torch.mean(crit_fake_pred)
@@ -24,12 +19,7 @@ def get_crit_loss(crit_fake_pred, crit_real_pred, gp, c_lambda):
 
     return crit_loss
 
-
-display_step = 50
-
-
-
-def train(df, epochs=500, batch_size=32):
+def train(df,generator_path,critic_path ,epochs=500, batch_size=32):
     ohe, scaler, input_dim, discrete_columns, continuous_columns, train_dl, data_train, data_test =prepare_data(df, batch_size)
 
     generator = Generator(input_dim, continuous_columns, discrete_columns).to(device)
@@ -121,12 +111,9 @@ def train(df, epochs=500, batch_size=32):
 
 	    
         cur_step += 1
-        torch.save(generator, "Results/GeneratorAllclassestest.pth")
-        torch.save(critic, "Results/CriticAllclassestest.pth")
+        torch.save(generator,generator_path )
+        torch.save(critic,critic_path )
     return generator, critic, ohe, scaler, data_train, data_test, input_dim
-
-
-
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -142,7 +129,7 @@ print(device)
 
 
 def train_plot(df, epochs, batchsize):
-    generator, critic, ohe, scaler, data_train, data_test, input_dim = train(df, epochs, batchsize)
+    generator, critic, ohe, scaler, data_train, data_test, input_dim = train(df,"Results/CriticAllclassestest.pth""Results/GeneratorAllclassestest.pth" epochs, batchsize)
     return generator, critic, ohe, scaler, data_train, data_test, input_dim
 
 size_of_fake_data=200000
