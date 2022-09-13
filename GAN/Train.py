@@ -129,7 +129,7 @@ print(device)
 
 
 def train_plot(df, epochs, batchsize):
-    generator, critic, ohe, scaler, data_train, data_test, input_dim = train(df,"Results/CriticAllclassestest.pth""Results/GeneratorAllclassestest.pth" epochs, batchsize)
+    generator, critic, ohe, scaler, data_train, data_test, input_dim = train(df,"Results/CriticAllclassestest.pth","Results/GeneratorAllclassestest.pth" epochs, batchsize)
     return generator, critic, ohe, scaler, data_train, data_test, input_dim
 
 size_of_fake_data=200000
