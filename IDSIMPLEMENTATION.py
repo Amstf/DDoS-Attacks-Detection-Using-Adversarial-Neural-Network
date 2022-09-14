@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import os
 # model building
 import tensorflow as tf
-from utils import drop_FF, data_split,pre_processing
+from utils import drop_FF, data_split,pre_processing,load_models
 
 
 gpus=tf.config.experimental.list_physical_devices('GPU')
@@ -45,13 +45,7 @@ def get_fake_data(data_path):
 def get_combined_data(real_df,fake_df):
     return pd.concat([real_df, fake_df], axis=0)
 
-def load_models(model_path):
-    model = tf.keras.models.load_model(model_path)
-    # Check its architecture
-    print(model.summary())
-    model.compile(loss="sparse_categorical_crossentropy", optimizer='Adam',metrics=['accuracy'])
-    print("**************************MODEL COMPILED**************************")
-    
+
 def modification(nb_features,fe,df):
   concate_path='/content/drive/MyDrive/ParisTech/new/combined.csv'
   ddos=pd.read_csv('/content/drive/MyDrive/ParisTech/models/LSTM/genm.csv')
@@ -96,4 +90,4 @@ ds=pridect_Real(X_train)
 
 pridect_Real(Criti,Critic_data)
 
-IDS=load_models("wandb/OnlyFF/files/model-best.h5")
+# IDS=load_models("wandb/OnlyFF/files/model-best.h5")
