@@ -4,6 +4,8 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder, MinMaxScaler
 import wandb
+import tensorflow as tf
+
 
 def drop_FF(df,features):
     list_1=list(features["col_name"][:20])
@@ -88,6 +90,13 @@ def pre_processing(X_train , X_test, y_train , y_test):
 
     return X_train , X_test, y_train , y_test
 
+def load_models(model_path):
+    model = tf.keras.models.load_model(model_path)
+    # Check its architecture
+    print(model.summary())
+    model.compile(loss="sparse_categorical_crossentropy", optimizer='Adam',metrics=['accuracy'])
+    print("**************************MODEL COMPILED**************************")
+    
 def wandb_login(project_name):
     wandb.login()
     wandb.init(project=project_name, config={"hyper":"paramet"})
