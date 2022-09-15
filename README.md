@@ -1,4 +1,5 @@
 # DDoS-Attacks-Detection-Using-Adversarial-Neural-Network
+## Abstract
 In a Distributed Denial of Service (DDoS) attack, a set of compromised internet-connected devices (distributed  servers, personal computers, Internet of Things devices, etc.) are used to overwhelm a target (server, service, or network) with a huge flood of requests, so that it can no longer satisfy legitimate requests. DDoS detection is a challenging issue in the cybersecurity domain, which was addressed recently through the use of Machine learning (ML) and Deep Learning (DL) algorithms. Although ML/DL can improve the detection accuracy, but they can still be evaded - ironically - through the use of ML/DL techniques in the generation of the attack traffic. In particular, Generative Adversarial Networks (GAN) have proven their efficiency in mimicking legitimate data.
 This Project addresses the above aspects of ML/DL-based DDoS detection and anti-detection techniques.
 First, we propose a DDoS detection method based on the Long Short-Term Memory (LSTM) model, which is a type of Recurrent Neural Networks (RNNs) capable of learning long-term dependencies.
