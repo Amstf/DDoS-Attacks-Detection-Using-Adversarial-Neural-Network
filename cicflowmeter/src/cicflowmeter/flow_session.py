@@ -117,7 +117,7 @@ class FlowSession(DefaultSession):
     def get_flows(self) -> list:
         return self.flows.values()
     def gfg(self,model,data_queue):
-        keys= [' Min Packet Length', 'Init_Win_bytes_forward', ' Fwd Packet Length Min', ' Destination Port', ' min_seg_size_forward', ' Average Packet Size', ' Init_Win_bytes_backward', ' Total Fwd Packets', 'Flow Bytes/s', ' Flow IAT Min', ' Packet Length Mean', 'Subflow Fwd Packets', ' Bwd Packets/s', 'Bwd IAT Total', ' Max Packet Length', ' Bwd IAT Max', ' Subflow Bwd Packets', ' Bwd Header Length', ' Fwd Packet Length Mean', ' Fwd Header Length']
+        keys=[' Destination Port', ' Flow Duration', ' Total Fwd Packets', ' Total Backward Packets', 'Total Length of Fwd Packets', ' Total Length of Bwd Packets', ' Fwd Packet Length Max', ' Fwd Packet Length Min', ' Fwd Packet Length Mean', ' Fwd Packet Length Std', 'Bwd Packet Length Max', ' Bwd Packet Length Mean', ' Bwd Packet Length Std', 'Flow Bytes/s', ' Flow Packets/s', ' Flow IAT Mean', ' Flow IAT Std', ' Flow IAT Max', ' Flow IAT Min', 'Fwd IAT Total', ' Fwd IAT Mean', ' Fwd IAT Std', ' Fwd IAT Max', ' Fwd IAT Min', 'Bwd IAT Total', ' Bwd IAT Mean', ' Bwd IAT Std', ' Bwd IAT Max', ' Bwd IAT Min', ' Fwd Header Length', ' Bwd Header Length', 'Fwd Packets/s', ' Bwd Packets/s', ' Min Packet Length', ' Max Packet Length', ' Packet Length Mean', ' Packet Length Std', ' Packet Length Variance', ' Down/Up Ratio', ' Average Packet Size', ' Avg Fwd Segment Size', ' Avg Bwd Segment Size', 'Subflow Fwd Packets', ' Subflow Fwd Bytes', ' Subflow Bwd Packets', ' Subflow Bwd Bytes', 'Init_Win_bytes_forward', ' Init_Win_bytes_backward', ' act_data_pkt_fwd', ' min_seg_size_forward', 'Active Mean', ' Active Std', ' Active Max', ' Active Min', 'Idle Mean', ' Idle Std', ' Idle Max', ' Idle Min']
         for i in range(5):
             data=data_queue.get()
             key=data.keys(),",Prediction"
@@ -129,27 +129,29 @@ class FlowSession(DefaultSession):
             res = res.reshape(1, 1,res.shape[0])
     
             y_test_pred_prob = model.predict(res, verbose=0)
-            y_test_pred = np.argmax(y_test_pred_prob, axis=1)
+            print(y_test_pred_prob)
+            # y_test_pred = np.argmax(y_test_pred_prob, axis=1)
          
-            if y_test_pred==0:
-                pass
-            else:
-                try:
-                    with open("test.csv", 'w') as csvfile:
-                        writer = csv.DictWriter(csvfile, fieldnames=csv_columns)
-                        writer.writeheader()
-                        for data in dict:
-                            writer.writerow(data)
+            # if y_test_pred==1:
+            #     print("DDoS")
+            #     pass
+            # else:
+            #     try:
+            #         with open("test.csv", 'w') as csvfile:
+            #             writer = csv.DictWriter(csvfile, fieldnames=csv_columns)
+            #             writer.writeheader()
+            #             for data in dict:
+            #                 writer.writerow(data)
                 
-                except IOError:
-                    print("I/O error")
+            #     except IOError:
+            #         print("I/O error")
                             
 
 
         
     def garbage_collect(self, latest_time) -> None:
         # TODO: Garbage Collection / Feature Extraction should have a separate thread
-        model= load_model('model-best.h5')
+        model= load_model('AllData')
         # print(model.summary())
 
         data_queue = Queue(maxsize=0)
