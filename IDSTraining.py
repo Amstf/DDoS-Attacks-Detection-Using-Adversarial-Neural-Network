@@ -4,7 +4,7 @@ from collections import Counter
 import os
 
 import tensorflow as tf
-from tensorflow.keras import  Sequential,Input, backend
+from tensorflow.keras import Sequential,Input, backend
 from tensorflow.keras.layers import LSTM , Dense , Dropout 
 from tensorflow.keras.callbacks import EarlyStopping
 from utils import *
