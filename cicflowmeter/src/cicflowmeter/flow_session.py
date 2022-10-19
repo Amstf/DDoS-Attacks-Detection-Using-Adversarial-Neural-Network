@@ -130,11 +130,11 @@ class FlowSession(DefaultSession):
     
             y_test_pred_prob = model.predict(res, verbose=0)
             print(y_test_pred_prob)
-            # y_test_pred = np.argmax(y_test_pred_prob, axis=1)
+            y_test_pred = np.argmax(y_test_pred_prob, axis=1)
          
-            # if y_test_pred==1:
-            #     print("DDoS")
-            #     pass
+            if y_test_pred==1:
+                print("DDoS")
+                pass
             # else:
             #     try:
             #         with open("test.csv", 'w') as csvfile:
@@ -144,7 +144,7 @@ class FlowSession(DefaultSession):
             #                 writer.writerow(data)
                 
             #     except IOError:
-            #         print("I/O error")
+                    # print("I/O error")
                             
 
 
