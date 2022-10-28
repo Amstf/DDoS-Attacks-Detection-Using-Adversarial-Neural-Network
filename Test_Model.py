@@ -87,8 +87,8 @@ def test_model(model_path,poly_df):
   
 
 def modification(nb_features):
-  concate_path='/content/drive/MyDrive/ParisTech/new/combined.csv'
-  ddos=pd.read_csv('/content/drive/MyDrive/ParisTech/models/LSTM/genm.csv')
+  concate_path='/combined.csv'
+  ddos=pd.read_csv('/genm.csv')
   df = pd.read_csv(concate_path)
   normal=df.loc[df['Label'] == 0]
 
