@@ -1,18 +1,19 @@
 # import libraries
-from tabnanny import verbose
-import pandas as pd
-import numpy as np
-# data split
-from sklearn.model_selection import train_test_split
-from collections import Counter
-# data preprocessing
-from sklearn.preprocessing import OneHotEncoder, LabelEncoder, MinMaxScaler
-import matplotlib.pyplot as plt
 import os
+from collections import Counter
+from tabnanny import verbose
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 # model building
 import tensorflow as tf
-from utils import drop_FF, data_split,pre_processing,load_models
+# data split
+from sklearn.model_selection import train_test_split
+# data preprocessing
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler, OneHotEncoder
 
+from utils import data_split, drop_FF, load_models, pre_processing
 
 gpus=tf.config.experimental.list_physical_devices('GPU')
 if gpus:
@@ -73,7 +74,7 @@ def pridect_Real(model,df):
     return ds
             
     
-fe=pd.read_csv("/home/infres/amustapha/DDoS/GAN/DDoS_Functional_Features.csv")
+fe=pd.read_csv("/DDoS_Functional_Features.csv")
 
 real_path="combined.csv"
 fake_path="Results/generatedAllData.csv"
@@ -90,4 +91,4 @@ ds=pridect_Real(X_train)
 
 pridect_Real(Criti,Critic_data)
 
-# IDS=load_models("wandb/OnlyFF/files/model-best.h5")
+

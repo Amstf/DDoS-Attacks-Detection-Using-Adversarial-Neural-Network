@@ -65,7 +65,7 @@ def train_model(model, X_train , y_train,epochs=30,batch_size=32,validation_spli
     # "model.h5" is saved in wandb.run.dir & will be uploaded at the end of training
     model.save(os.path.join(wandb.run.dir, "model.h5"))
 
-# fe=pd.read_csv("/home/infres/amustapha/DDoS/GAN/DDoS_Functional_Features.csv")
+# fe=pd.read_csv("/DoS_Functional_Features.csv")
     
 # fe=pd.read_csv("DDoS_Functional_Features.csv")
 

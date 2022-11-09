@@ -21,11 +21,6 @@ if gpus:
         #,e,pry growth must be set before GPUs have been initialized
         print(e)
 
-
-
-    
-
-
 def build_LSTM_model(n_features,n_classes):
 
     model=Sequential()
@@ -52,7 +47,7 @@ def train_model(model, X_train , y_train ):
     # "model.h5" is saved in wandb.run.dir & will be uploaded at the end of training
     model.save(os.path.join(wandb.run.dir, "model.h5"))
 
-fe=pd.read_csv("/home/infres/amustapha/DDoS/GAN/DDoS_Functional_Features.csv")
+fe=pd.read_csv("DDoS_Functional_Features.csv")
 
 data_path="combined.csv"
 dataset= pd.read_csv(data_path)
