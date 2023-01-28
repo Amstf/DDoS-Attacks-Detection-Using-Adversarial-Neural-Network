@@ -19,4 +19,4 @@ The results show the inefficiency of LSTM-based detection scheme. Finally, we de
 
 Link: https://www.sciencedirect.com/science/article/pii/S0167404823000275
 
-Citation : Mustapha, Ali, et al. "Detecting DDoS Attacks Using Adversarial Neural Network." Computers & Security (2023): 103117.
+Citation :Mustapha, A., Khatoun, R., Zeadally, S., Chbib, F., Fadlallah, A., Fahs, W. and El Attar, A., 2023. Detecting DDoS Attacks Using Adversarial      Neural Network. Computers & Security, p.103117.
