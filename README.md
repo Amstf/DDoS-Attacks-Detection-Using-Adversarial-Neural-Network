@@ -1,4 +1,5 @@
 # DDoS-Attacks-Detection-Using-Adversarial-Neural-Network
+
 ## Abstract
 In a Distributed Denial of Service (DDoS) attack, a set of compromised internet-connected devices (distributed  servers, personal computers, Internet of Things devices, etc.) are used to overwhelm a target (server, service, or network) with a huge flood of requests, so that it can no longer satisfy legitimate requests. DDoS detection is a challenging issue in the cybersecurity domain, which was addressed recently through the use of Machine learning (ML) and Deep Learning (DL) algorithms. Although ML/DL can improve the detection accuracy, but they can still be evaded - ironically - through the use of ML/DL techniques in the generation of the attack traffic. In particular, Generative Adversarial Networks (GAN) have proven their efficiency in mimicking legitimate data.
 This Project addresses the above aspects of ML/DL-based DDoS detection and anti-detection techniques.
@@ -16,3 +17,6 @@ The results show the inefficiency of LSTM-based detection scheme. Finally, we de
 
 4= We trained another model using the original dataset including only the DDoS's functional features, to be able to distinguish between DDoS and normal samples.
 
+Link: https://www.sciencedirect.com/science/article/pii/S0167404823000275
+
+Citation : Mustapha, Ali, et al. "Detecting DDoS Attacks Using Adversarial Neural Network." Computers & Security (2023): 103117.
