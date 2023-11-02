@@ -25,7 +25,7 @@ The results show the inefficiency of LSTM-based detection scheme. Finally, we de
 
 # DDoS Adversarial Attack
 
-![img](https://github.com/Amstf/DDoS-Attacks-Detection-Using-Adversarial-Neural-Network/blob/main/Images/IDSmodel.jpg)
+![img](https://github.com/Amstf/DDoS-Attacks-Detection-Using-Adversarial-Neural-Network/blob/main/Images/DDoSattack..jpg)
 
 # IDS Model architecture
 
