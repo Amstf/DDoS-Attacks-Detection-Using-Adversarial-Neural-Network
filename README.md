@@ -17,6 +17,28 @@ The results show the inefficiency of LSTM-based detection scheme. Finally, we de
 
 4= We trained another model using the original dataset including only the DDoS's functional features, to be able to distinguish between DDoS and normal samples.
 
+
+
+# GAN Model
+![img](https://github.com/Amstf/DDoS-Attacks-Detection-Using-Adversarial-Neural-Network/blob/main/Images/ganModel.jpg)
+
+
+# DDoS Adversarial Attack
+
+![img](https://github.com/Amstf/DDoS-Attacks-Detection-Using-Adversarial-Neural-Network/blob/main/Images/IDSmodel.jpg)
+
+# IDS Model architecture
+
+![img](https://github.com/Amstf/DDoS-Attacks-Detection-Using-Adversarial-Neural-Network/blob/main/Images/IDSmodel.jpg)
+
+
+# IDS Model Deployment
+
+![img](https://github.com/Amstf/DDoS-Attacks-Detection-Using-Adversarial-Neural-Network/blob/main/Images/IDSdeployment.jpg)
+
+
+
+
 Link: https://www.sciencedirect.com/science/article/pii/S0167404823000275
 
 Citation :Mustapha, A., Khatoun, R., Zeadally, S., Chbib, F., Fadlallah, A., Fahs, W. and El Attar, A., 2023. Detecting DDoS Attacks Using Adversarial      Neural Network. Computers & Security, p.103117.
