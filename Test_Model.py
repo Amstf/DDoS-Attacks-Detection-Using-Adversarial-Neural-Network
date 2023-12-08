@@ -87,8 +87,8 @@ def test_model(model_path,poly_df):
   
 
 def modification(nb_features):
-  concate_path='/combined.csv'
-  ddos=pd.read_csv('/genm.csv')
+  concate_path='/combined.csv' # combination  of both cicddos2019 and cicids2017 dataset
+  ddos=pd.read_csv('/generated_set.csv') # saved generated dataset
   df = pd.read_csv(concate_path)
   normal=df.loc[df['Label'] == 0]
 
@@ -112,7 +112,6 @@ model_path='/content/model-best.h5'
 result_df=pd.DataFrame()
 result_df.insert(0,"y_Test" , y_test)
 modifications=[0,8,16,20]
-
 
 
 
