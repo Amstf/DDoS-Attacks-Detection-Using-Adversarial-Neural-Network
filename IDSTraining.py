@@ -42,20 +42,19 @@ def train_model(model, X_train , y_train ):
     
     callback = EarlyStopping(patience=20, mode='min', restore_best_weights=True)
     backend.clear_session()
-    history = model.fit(X_train,y_train, 
+    model.fit(X_train,y_train, 
                         epochs=30, batch_size=32, validation_split=0.2, callbacks=[callback,WandbCallback()])
     # "model.h5" is saved in wandb.run.dir & will be uploaded at the end of training
     model.save(os.path.join(wandb.run.dir, "model.h5"))
 
-fe=pd.read_csv("DDoS_Functional_Features.csv")
+DDoS_Functional_Features=pd.read_csv("DDoS_Functional_Features.csv")
 
-data_path="combined.csv"
+data_path="combined.csv" # combination  of both cicddos2019 and cicids2017 dataset
 dataset= pd.read_csv(data_path)
-dataset=drop_FF(dataset,fe)
+dataset=drop_FF(dataset,DDoS_Functional_Features)
 a=len(dataset.columns)
 X_train , X_test, y_train , y_test = data_split(dataset)
 X_train , X_test, y_train , y_test = pre_processing(X_train , X_test, y_train , y_test)
-del(dataset)
 model = build_LSTM_model(38, 2)
 wandb_login()
 train_model(model, X_train , y_train)
